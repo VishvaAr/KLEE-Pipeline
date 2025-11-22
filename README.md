@@ -33,7 +33,7 @@ Solution: We identified a version mismatch between clang-13 (our compiler) and t
 
 This reusable script automates the entire process. It can be copied to other test directories and modified with new filenames.
 
-bash ```
+```
 # --- 0. CLEAN UP ---
 echo "Cleaning up old files..."
 rm -f harness.bc driverCWE121.bc instLargeNum.bc
