@@ -1,20 +1,21 @@
 ## CWE121/CWE129: Stack Overflow (Automated Build Script)
 
-This harness finds a bug where a symbolic integer is used to access a stack array. It uses a reusable shell script to automate the entire compile-link-run pipeline, making it adaptable for future tests.
+This harness finds a bug where a symbolic integer is used to access a stack array. It uses a reusable script to automate the entire compile-link-run pipeline, making it adaptable for future tests.
 
-Source Code: driverCWE121.c, instLargeNum.c
+Source Code: driver.c, instrumentedLargeNum.c
 
-Harness Method: Unlike the previous examples, this harness is built from two separate .c files that are compiled independently and then linked together.
+Harness Method: Harness is built from two separate .c files that are compiled independently and then linked together.
 
-driverCWE121.c: Defines main() and the __klee_get_symbolic_int() stub. It includes only a prototype for the _bad function.
+driverCWE121.c: Defines main() and the __klee_get_symbolic_int() stub. It includes only the _bad function.
 
-instLargeNum.c: Defines the vulnerable _bad function. It includes only a prototype for the __klee_get_symbolic_int function.
+instLargeNum.c: Defines the vulnerable _bad function.
 
 Both files were modified to remove all dependencies on testcasesupport/std_testcase.h (e.g., OMITBAD, printLine), creating a clean, self-contained test.
 
 ## Challenges & Solutions
 
-This approach presented several technical challenges that were solved iteratively:
+
+We had a bunch of compile issues:
 
 Challenge: Initial clang errors like cannot specify -o when generating multiple output files and -emit-llvm cannot be used when linking.
 
@@ -24,20 +25,15 @@ Challenge: The initial C code included testcasesupport/std_testcase.h, leading t
 
 Solution: We refactored the C code to remove all dependencies (like OMITBAD and printLine). This completely eliminated the need for complex -I ../../ include paths.
 
-Challenge: KLEE failed with ERROR: Loading file harness.bc failed: Invalid record. This was caused by compiler warnings for "implicit function declaration."
-
-Solution: We added function prototypes to the top of each .c file (e.g., void ..._bad(); in the driver, and int ..._int(); in the instrumented file).
-
-Challenge: The Invalid record error persisted even after fixing the warnings.
+Challenge: The Invalid record error.
 
 Solution: We identified a version mismatch between clang-13 (our compiler) and the generic llvm-link (our linker). Using the version-specific llvm-link-13 ensured the bitcode was compatible and finally fixed the error.
 
-Build Script (run_klee.sh)
+## Build Script (run_klee.sh)
 
 This reusable script automates the entire process. It can be copied to other test directories and modified with new filenames.
 
-#!/bin/bash
-
+bash ```
 # --- 0. CLEAN UP ---
 echo "Cleaning up old files..."
 rm -f harness.bc driverCWE121.bc instLargeNum.bc
@@ -89,6 +85,7 @@ echo "----------------------------------------"
 echo "KLEE run finished."
 echo "Results are stored in: \$(pwd)/klee-test-results"
 
+```
 
 Script Explanation
 
