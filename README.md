@@ -1,4 +1,4 @@
-CWE121/CWE129: Stack Overflow (Automated Build Script)
+## CWE121/CWE129: Stack Overflow (Automated Build Script)
 
 This harness finds a bug where a symbolic integer is used to access a stack array. It uses a reusable shell script to automate the entire compile-link-run pipeline, making it adaptable for future tests.
 
