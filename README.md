@@ -33,6 +33,8 @@ Solution: We identified a version mismatch between clang-13 (our compiler) and t
 
 This reusable script automates the entire process. It can be copied to other test directories and modified with new filenames.
 
+Used an LLM to help me make this script:
+Prompt: Given this driver and instrumented file, create a script to automate the KLEE build process. We had to edit a lot of things to match filenames and fix compile commands.
 ```
 # --- 0. CLEAN UP ---
 echo "Cleaning up old files..."
