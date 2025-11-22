@@ -12,7 +12,7 @@ instLargeNum.c: Defines the vulnerable _bad function. It includes only a prototy
 
 Both files were modified to remove all dependencies on testcasesupport/std_testcase.h (e.g., OMITBAD, printLine), creating a clean, self-contained test.
 
-Challenges & Solutions
+## Challenges & Solutions
 
 This approach presented several technical challenges that were solved iteratively:
 
